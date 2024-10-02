@@ -22,11 +22,11 @@ public class MoveCamera : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
             Player_pos += transform.forward * Player_Speed;
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.LeftArrow))
             Player_pos -= transform.right * Player_Speed;
         if (Input.GetKey(KeyCode.S))
             Player_pos -= transform.forward * Player_Speed;
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.RightArrow))
             Player_pos += transform.right * Player_Speed;
         if (Input.GetKey(KeyCode.UpArrow))
             Player_pos += transform.up * Player_Speed;
@@ -34,10 +34,10 @@ public class MoveCamera : MonoBehaviour
             Player_pos -= transform.up * Player_Speed;
 
 
-        if (Input.GetKey(KeyCode.LeftArrow))
-            Player_rot.y -= Player_Speed;
-        if (Input.GetKey(KeyCode.RightArrow))
-            Player_rot.y += Player_Speed;
+        if (Input.GetKeyDown(KeyCode.A))
+            Player_rot.y -= 90;
+        if (Input.GetKeyDown(KeyCode.D))
+            Player_rot.y += 90;
 
 
         transform.rotation = Quaternion.Euler(Player_rot);
