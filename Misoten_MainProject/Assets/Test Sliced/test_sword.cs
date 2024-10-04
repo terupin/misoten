@@ -7,44 +7,42 @@ using UnityEngine.EventSystems;
 public class test_sword : MonoBehaviour
 {
     //切断面のマテリアル
+    [SerializeField,Header("切断面のマテリアル")]
     public Material Slice_Color;
 
-    //切れるもののタグの名前
+    //切断するオブジェクトのタグ名
     [SerializeField, Header("切れるオブジェクトのタグ")]
     public string cut_tag = "Cut";
 
-    public Transform swordTop;  //剣の先端
-    public Transform swordHit;  //剣の柄
+    //刀の先端を示す空オブジェクト
+    [SerializeField,Header("刀の先端")]
+    public Transform swordTop;
 
-    public Vector3 startPos;  //切り始めの剣の位置
-    public Vector3 endPos;  //霧終わりの剣の位置
+    //刀の柄を示す空オブジェクト
+    [SerializeField, Header("刀の柄")]
+    public Transform swordHit;
 
-    public Vector3 cutNormal; // Planeの法線
-
-    void Start()
-    {
-    }
-
-    void Update()
-    {
-
-    }
+    private Vector3 startPos;  //切り始めの刀の位置
+    private Vector3 endPos;  //霧終わりの刀の位置
+    private Vector3 cut_ObjPos;//切れるオブジェクトのポジション
 
     private void OnTriggerEnter(Collider other)
     {
         //切れるオブジェクトか？
         if (other.tag == cut_tag)
         {
-            Debug.Log("当たった");
-
             //当たった時に存在する刀の場所
             startPos = this.transform.position;
+            Debug.Log("当たった");
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         Debug.Log("出たよ");
+
+        //切れるオブジェクトのポジションを取得
+        cut_ObjPos = other.transform.position;
 
         //出た時に存在する刀の場所
         endPos = this.transform.position;
@@ -53,19 +51,22 @@ public class test_sword : MonoBehaviour
         Vector3 swordMovement = endPos - startPos;
 
         //剣の柄と先端のベクトルを計算して、剣の向きを取得
-        Vector3 swordDirection = swordTop.position - swordHit.position;
+        Vector3 swordDirection = (swordTop.position - swordHit.position).normalized;
 
         //剣の軌道に垂直な平面を作成
-        Vector3 cutNormal = Vector3.Cross(swordMovement, swordDirection).normalized;
-        EzySlice.Plane cutPlane = new EzySlice.Plane(cutNormal, endPos);
+        Vector3 cutNormal = Vector3.Cross(swordMovement, swordDirection).normalized; //外積の計算
 
+        Vector3 slice_pos = startPos - cut_ObjPos;
+       
+        EzySlice.Plane cutPlane = new EzySlice.Plane(slice_pos, cutNormal);
+            
         //EzySliceで相手をスライスする
         GameObject targetObject = other.gameObject;
         SlicedHull slicedObject = targetObject.Slice(cutPlane, Slice_Color);  //第２引数は切られた断面のマテリアル
 
         if (slicedObject != null)
         {
-            //スライスされた部分を取得
+            //スライスされた部分を生成
             GameObject upperHull = slicedObject.CreateUpperHull(targetObject, null);
             GameObject lowerHull = slicedObject.CreateLowerHull(targetObject, null);
 
@@ -76,6 +77,8 @@ public class test_sword : MonoBehaviour
             //元のオブジェクトを削除
             Destroy(targetObject);
         }
+
+
     }
 
 
@@ -85,8 +88,9 @@ public class test_sword : MonoBehaviour
         //MeshColliderのConvexをtrueにしないと、すり抜けてしまうので注意
         obj.AddComponent<MeshCollider>().convex = true;
         obj.AddComponent<Rigidbody>();
+
+        //切れたものをもう一度切れるようにするためのタグ付け
+        obj.gameObject.tag = cut_tag;
     }
-
-
 
 }

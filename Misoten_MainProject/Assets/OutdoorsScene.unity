@@ -524,9 +524,6 @@ MonoBehaviour:
   cut_tag: Cut
   swordTop: {fileID: 2090847574}
   swordHit: {fileID: 1086886754}
-  startPos: {x: 0, y: 0, z: 0}
-  endPos: {x: 0, y: 0, z: 0}
-  cutNormal: {x: 0, y: 0, z: 0}
 --- !u!1 &1086886753
 GameObject:
   m_ObjectHideFlags: 0
@@ -1137,5 +1134,5 @@ SceneRoots:
   - {fileID: 1664933647}
   - {fileID: 2034630562}
   - {fileID: 1024796210}
-  - {fileID: 1086886754}
   - {fileID: 2090847574}
+  - {fileID: 1086886754}
