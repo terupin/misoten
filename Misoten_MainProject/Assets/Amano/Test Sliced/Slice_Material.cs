@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Slice_Material : MonoBehaviour
 {
+    //切断面のマテリアル
+    [SerializeField, Header("切断面のマテリアル")]
+    public Material slice_Material;
+
+
     // Start is called before the first frame update
     void Start()
     {
