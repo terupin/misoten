@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using EzySlice;
 using UnityEngine.EventSystems;
+using System.Net.Sockets;
 
 public class test_sword : MonoBehaviour
 {
@@ -89,7 +90,10 @@ public class test_sword : MonoBehaviour
     {
         //MeshColliderのConvexをtrueにしないと、すり抜けてしまうので注意
         obj.AddComponent<MeshCollider>().convex = true;
-        obj.AddComponent<Rigidbody>();
+
+        //Rigidbody関係
+        Rigidbody rb = obj.AddComponent<Rigidbody>();
+        rb.useGravity = true;
 
         //切れたものをもう一度切れるようにするためのタグ付け
         obj.gameObject.tag = cut_tag;
