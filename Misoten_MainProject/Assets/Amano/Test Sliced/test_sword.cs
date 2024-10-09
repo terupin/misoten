@@ -57,7 +57,7 @@ public class test_sword : MonoBehaviour
 
             //剣の軌道に垂直な平面を作成
             Vector3 cutNormal =Vector3.Cross(swordMovement, swordDirection); //外積の計算
-         //   cutNormal = other.transform.InverseTransformDirection(cutNormal); //ローカル座標に変換
+            cutNormal = other.transform.InverseTransformDirection(cutNormal); //ローカル座標に変換
 
             //切れる場所の計算
             Vector3 slice_pos = other.transform.InverseTransformDirection(endPos-cut_ObjPos); 
