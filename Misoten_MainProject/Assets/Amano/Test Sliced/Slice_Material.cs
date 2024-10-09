@@ -8,16 +8,10 @@ public class Slice_Material : MonoBehaviour
     [SerializeField, Header("切断面のマテリアル")]
     public Material slice_Material;
 
+ //   [SerializeField,Header("切れた後の重さ")]
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
+    
+
 }

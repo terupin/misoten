@@ -39,46 +39,48 @@ public class test_sword : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("出たよ");
-
-        //切れるオブジェクトのポジションを取得
-        cut_ObjPos = other.transform.position;
-
-        //出た時に存在する刀の場所
-        endPos = this.transform.position;
-
-        //剣の移動ベクトルを計算する
-        Vector3 swordMovement = endPos - startPos;
-
-        //剣の柄と先端のベクトルを計算して、剣の向きを取得
-        Vector3 swordDirection = (swordTop.position - swordHit.position).normalized;
-
-        //剣の軌道に垂直な平面を作成
-        Vector3 cutNormal = Vector3.Cross(swordMovement, swordDirection).normalized; //外積の計算
-
-        Vector3 slice_pos = startPos - cut_ObjPos;
-       
-        EzySlice.Plane cutPlane = new EzySlice.Plane(slice_pos, cutNormal);
-            
-        //EzySliceで相手をスライスする
-        GameObject targetObject = other.gameObject;
-        SlicedHull slicedObject = targetObject.Slice(cutPlane, Slice_Color);  //第２引数は切られた断面のマテリアル
-
-        if (slicedObject != null)
+        if(other.tag == cut_tag)
         {
-            //スライスされた部分を生成
-            GameObject upperHull = slicedObject.CreateUpperHull(targetObject, null);
-            GameObject lowerHull = slicedObject.CreateLowerHull(targetObject, null);
+            Debug.Log("出たよ");
 
-            //新しい部分物理コンポーネントを追加
-            MakeItPhysical(upperHull);
-            MakeItPhysical(lowerHull);
+            //切れるオブジェクトのポジションを取得
+            cut_ObjPos = other.transform.position;
 
-            //元のオブジェクトを削除
-            Destroy(targetObject);
+            //出た時に存在する刀の場所
+            endPos = this.transform.position;
+
+            //剣の移動ベクトルを計算する
+            Vector3 swordMovement = endPos - startPos;
+
+            //剣の柄と先端のベクトルを計算して、剣の向きを取得
+            Vector3 swordDirection = (swordTop.position - swordHit.position).normalized;
+
+            //剣の軌道に垂直な平面を作成
+            Vector3 cutNormal =Vector3.Cross(swordMovement, swordDirection); //外積の計算
+         //   cutNormal = other.transform.InverseTransformDirection(cutNormal); //ローカル座標に変換
+
+            //切れる場所の計算
+            Vector3 slice_pos = other.transform.InverseTransformDirection(endPos-cut_ObjPos); 
+            EzySlice.Plane cutPlane = new EzySlice.Plane(slice_pos, cutNormal);  
+
+            //EzySliceで相手をスライスする
+            GameObject targetObject = other.gameObject;
+            SlicedHull slicedObject = targetObject.Slice(cutPlane, Slice_Color);  //第２引数は切られた断面のマテリアル
+
+            if (slicedObject != null)
+            {
+                //スライスされた部分を生成
+                GameObject upperHull = slicedObject.CreateUpperHull(targetObject, null);
+                GameObject lowerHull = slicedObject.CreateLowerHull(targetObject, null);
+
+                //新しい部分物理コンポーネントを追加
+                MakeItPhysical(upperHull);
+                MakeItPhysical(lowerHull);
+
+                //元のオブジェクトを削除
+                Destroy(targetObject);
+            }
         }
-
-
     }
 
 
